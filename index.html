@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBPL | Garage de Prestige</title>
+
+    <style>
+        /* CRITICAL PRELOADER STYLE (INLINED FOR SPEED) */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100vh;
+            background: #000 url('4.webp') center/cover no-repeat;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .preloader::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        .preloader-content {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .loader-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .loader-bar {
+            width: 0%;
+            height: 100%;
+            background: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            animation: loadProgress 8s forwards;
+        }
+
+        @keyframes loadProgress {
+            0% {
+                width: 0%;
+                animation-timing-function: cubic-bezier(0.8, 0, 0.2, 1);
+            }
+
+            30% {
+                width: 60%;
+                animation-timing-function: linear;
+            }
+
+            70% {
+                width: 75%;
+                animation-timing-function: cubic-bezier(0.8, 0, 0.2, 1);
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .preloader-msg {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.65rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-top: 25px;
+        }
+
+        .preloader-actions {
+            margin-top: 35px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .start-btn,
+        .shop-btn {
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn {
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.4);
+        }
+
+        .shop-btn {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .shop-btn:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+            transform: translateY(-3px);
+        }
+    </style>
+
+    <script>
+        // Safari Detection
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            document.documentElement.classList.add('is-safari');
+        }
+
+        (function() {
+            const PRELOADER_KEY = 'sbpl_preloader_last_shown';
+            const EXPIRE_MS = 24 * 60 * 60 * 1000; // 24 heures
+
+            // --- Vérifier si le preloader a déjà été affiché dans les 24h ---
+            const lastShown = localStorage.getItem(PRELOADER_KEY);
+            const alreadySeen = lastShown && (Date.now() - parseInt(lastShown, 10)) < EXPIRE_MS;
+
+            function preventDefault(e) { e.preventDefault(); }
+            const keys = { 37: 1, 38: 1, 39: 1, 40: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1 };
+            function preventDefaultForScrollKeys(e) {
+                if (keys[e.keyCode]) { preventDefault(e); return false; }
+            }
+
+            function disableScroll() {
+                window.addEventListener('DOMMouseScroll', preventDefault, false);
+                window.addEventListener('wheel', preventDefault, { passive: false });
+                window.addEventListener('touchmove', preventDefault, { passive: false });
+                window.addEventListener('keydown', preventDefaultForScrollKeys, false);
+            }
+
+            function enableScroll() {
+                window.removeEventListener('DOMMouseScroll', preventDefault, false);
+                window.removeEventListener('wheel', preventDefault, { passive: false });
+                window.removeEventListener('touchmove', preventDefault, { passive: false });
+                window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
+                document.body.style.overflow = 'auto';
+            }
+
+            if (!alreadySeen) {
+                // Première visite (ou > 24h) : bloquer le scroll immédiatement
+                disableScroll();
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const bar     = document.getElementById('loader-bar');
+                const msg     = document.getElementById('preloader-msg');
+                const actions = document.getElementById('preloader-actions');
+                const btnStart = document.getElementById('start-btn');
+                const btnShop  = document.getElementById('shop-btn');
+                const pre      = document.getElementById('preloader');
+
+                // --- Si déjà vu dans les 24h : cacher le preloader immédiatement ---
+                if (alreadySeen) {
+                    if (pre) pre.style.display = 'none';
+                    enableScroll();
+                    window.dispatchEvent(new CustomEvent('preloaderFinished'));
+                    if (typeof revealSite === 'function') revealSite();
+                    return;
+                }
+
+                // --- Sinon : comportement normal ---
+                if (bar) {
+                    bar.style.transition = 'width 8s linear';
+                    setTimeout(() => { bar.style.width = '100%'; }, 100);
+                }
+
+                setTimeout(() => {
+                    if (msg) msg.innerText = 'SYSTÈMES PRÊTS';
+                    if (actions) actions.style.display = 'flex';
+                }, 8000);
+
+                function dismissPreloader() {
+                    if (pre) {
+                        pre.style.transition = 'opacity 1s ease, transform 1.2s ease';
+                        pre.style.opacity = '0';
+                        pre.style.transform = 'scale(1.1)';
+                        enableScroll();
+                        // Sauvegarder le timestamp dans localStorage
+                        localStorage.setItem(PRELOADER_KEY, Date.now().toString());
+                        window.dispatchEvent(new CustomEvent('preloaderFinished'));
+                        setTimeout(() => {
+                            pre.style.display = 'none';
+                            if (typeof revealSite === 'function') revealSite();
+                        }, 1000);
+                    }
+                }
+
+                if (btnStart) btnStart.addEventListener('click', dismissPreloader);
+
+                if (btnShop) {
+                    btnShop.addEventListener('click', () => {
+                        localStorage.setItem(PRELOADER_KEY, Date.now().toString());
+                        window.location.href = 'shop/boutique.html';
+                    });
+                }
+            });
+        })();
+    </script>
+
+    <!-- Preload Critical Assets -->
+    <link rel="preload" href="4.webp" as="image">
+
+    <!-- App Icons -->
+    <link rel="apple-touch-icon" href="2.png">
+    <link rel="icon" type="image/png" href="2.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body style="overflow: hidden;">
+    <!-- PRELOADER -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="loader-bar-container">
+                <div class="loader-bar" id="loader-bar"></div>
+            </div>
+            <p id="preloader-msg" class="preloader-msg">INITIALISATION DES SYSTÈMES...</p>
+            <div class="preloader-actions" id="preloader-actions" style="display: none;">
+                <button id="start-btn" class="start-btn">DÉCOUVRIR</button>
+                <button id="shop-btn" class="shop-btn">BOUTIQUE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CURSOR -->
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-follower"></div>
+
+
+
+    <!-- NAVBAR (1cm high, attached to top, scrolls away) -->
+    <nav class="navbar-simple" style="box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+        <div class="nav-wrapper">
+            <a href="#" class="logo-min">
+                <img src="2.png" alt="SBPL" style="height: 30px; width: auto; opacity: 0.9;">
+            </a>
+
+            <!-- Desktop Links -->
+            <div class="nav-links-desktop">
+                <a href="#accueil">ACCUEIL</a>
+                <a href="#services">SERVICES</a>
+                <a href="#a-propos">À PROPOS</a>
+                <a href="#shop">SHOP</a>
+                <a href="#contact" class="btn-min">CONTACT</a>
+            </div>
+
+            <!-- Burger Toggle -->
+            <button class="burger-toggle" id="burger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MOBILE OVERLAY MENU -->
+    <div class="mobile-nav-overlay" id="mobile-nav">
+        <div class="mobile-nav-links">
+            <a href="#accueil">ACCUEIL</a>
+            <a href="#services">SERVICES</a>
+            <a href="#a-propos">À PROPOS</a>
+            <a href="#shop">SHOP</a>
+            <a href="#contact">CONTACT</a>
+        </div>
+    </div>
+
+    <!-- SECTION 1 (HERO) -->
+    <section class="normal-section section1" id="accueil"
+        style="height: 130vh; position: relative; z-index: 20; background: transparent !important; display: flex; justify-content: center; align-items: center;">
+
+        <div class="hero-overlay">
+            <div class="hero-top-left">
+                <h1 class="hero-main-title">TECHNIQUE<br>PRÉCISION</h1>
+            </div>
+
+            <div class="hero-top-right">
+                <div class="image-split-rect">
+                    <div class="split-slide active"><img src="produit/1.webp" alt="Produit 1"></div>
+                    <div class="split-slide"><img src="produit/2.webp" alt="Produit 2"></div>
+                    <div class="split-slide"><img src="produit/3.webp" alt="Produit 3"></div>
+                    <div class="split-slide"><img src="produit/4.webp" alt="Produit 4"></div>
+                </div>
+            </div>
+
+
+            <div class="hero-bottom-left">
+                <div class="hero-info">
+                    <p>Passion et précision technique<br>au cœur de notre atelier spécialisé.</p>
+                </div>
+            </div>
+
+            <!-- CALL CTA — centred in hero -->
+            <div class="hero-call-cta">
+                <a href="tel:+22893343696" class="glass-call-btn" title="Appeler">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.11 2.18 2 2 0 012.08 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+                    </svg>
+                    <div class="glass-call-text">
+                        <span class="glass-call-label">Appelle maintenant</span>
+                        <span class="glass-call-number">+228 93 34 36 96</span>
+                    </div>
+                </a>
+                <a href="https://wa.me/22893343696" target="_blank" rel="noopener" class="glass-wa-btn" title="WhatsApp">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                        <path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.308A9.954 9.954 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.073-1.117l-.292-.174-3.017.791.806-2.944-.19-.302A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="hero-bottom-right">
+                <div class="hero-socials">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- SBPL REVEAL SECTION -->
+    <section class="sbpl-reveal-section">
+        <div class="blend-text" style="position: relative; top: auto; left: auto; transform: none;">
+            <span class="char">S</span>
+            <span class="char">B</span>
+            <span class="char">P</span>
+            <span class="char">L</span>
+        </div>
+
+
+    </section>
+
+    <!-- TEXT REVEAL SECTION (STICKY) -->
+    <section id="a-propos" class="text-reveal-section"
+        style="position: relative; z-index: 30; box-shadow: 0 -30px 60px rgba(0,0,0,1);">
+
+
+        <div class="sticky-text-container">
+            <!-- PRODUITS PARALLAX (Zigzag) -->
+            <div class="parallax-product p1"><img src="produit/1.webp" alt="Produit 1"></div>
+            <div class="parallax-product p2"><img src="produit/2.webp" alt="Produit 2"></div>
+            <div class="parallax-product p3"><img src="produit/3.webp" alt="Produit 3"></div>
+            <div class="parallax-product p4"><img src="produit/4.webp" alt="Produit 4"></div>
+
+            <h2 class="reveal-text-main">
+                Leader de la maintenance automobile au Bénin. L'excellence depuis 2019.
+            </h2>
+        </div>
+    </section>
+
+
+    <section class="entities-video-section" id="entities-video-intro">
+        <!-- Fallback for Safari -->
+        <div class="safari-fallback-image" style="display: none; position: absolute; inset: 0; background: url('frame 1/1.webp') center/cover no-repeat; z-index: 1;"></div>
+        
+        <div class="canvas-wrapper" id="canvas-wrapper-2"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden;">
+            <canvas id="canvas-2"></canvas>
+        </div>
+    </section>
+
+
+
+    <!-- PHASE 2: CINEMATIC SHOWCASE (PREMIUM VERSION) -->
+    <section class="horizontal-showcase" id="valeurs-section">
+        <!-- Background Parallax Image -->
+        <div class="showcase-bg-image" style="background-image: url('4.webp');"></div>
+
+        <div class="showcase-sticky-wrapper">
+            <div class="showcase-side-content">
+                <div class="side-logo-wrap">
+                    <img src="logo/sbpl1.webp" alt="SBPL" class="side-logo-contrast">
+                </div>
+                <div class="side-dash"></div>
+            </div>
+
+            <div class="showcase-container">
+                <!-- Card 1: JENN -->
+                <div class="showcase-card" data-num="01">
+                    <div class="card-inner glass-contour">
+                        <div class="card-logo-wrap"><img src="logo/jenn.webp" alt="JENN SERVICES" loading="lazy"
+                                decoding="async"></div>
+                        <div class="card-parallax-content">
+                            <h3>JENN SERVICES</h3>
+                            <p>Spécialisée dans la vente de produits pétroliers (essence, gasoil), avec un souci
+                                constant de qualité et de conformité.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2: SBPL -->
+                <div class="showcase-card" data-num="02">
+                    <div class="card-inner glass-contour">
+                        <div class="card-logo-wrap"><img src="logo/sbpl1.webp" alt="SBPL" loading="lazy"
+                                decoding="async"></div>
+                        <div class="card-parallax-content">
+                            <h3>SBPL</h3>
+                            <p>Cœur historique du groupe, experte dans la maintenance automobile, la vente de pneus,
+                                lubrifiants et pièces détachées.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3: SOBEMAT -->
+                <div class="showcase-card" data-num="03">
+                    <div class="card-inner glass-contour">
+                        <div class="card-logo-wrap"><img src="logo/sbm1.webp" alt="SOBEMAT" loading="lazy"
+                                decoding="async"></div>
+                        <div class="card-parallax-content">
+                            <h3>SOBEMAT</h3>
+                            <p>Outillage et matériaux de tournage, outils et équipements pour les garages mécaniques de
+                                précision.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 4: LMH -->
+                <div class="showcase-card" data-num="04">
+                    <div class="card-inner glass-contour">
+                        <div class="card-logo-wrap"><img src="logo/lmh-scaled.webp" alt="LMH" loading="lazy"
+                                decoding="async"></div>
+                        <div class="card-parallax-content">
+                            <h3>LMH</h3>
+                            <p>Spécialisée dans les solutions hydrauliques et équipements pour les systèmes à haute
+                                pression et installations industrielles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="showcase-progress-wrap">
+                <div class="showcase-progress-bar"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SHOP SECTION (MINIMALIST) -->
+    <section class="shop-section" id="shop">
+        <div class="container">
+            <h1 class="reveal-title expertise-full-title" style="margin-bottom: 60px; text-align: center;">NOTRE SHOP
+            </h1>
+            <div class="shop-grid">
+                <div class="shop-item" onclick="window.location.href='shop/boutique.html'" style="cursor:pointer">
+                    <div class="shop-img-container">
+                        <div class="shop-img"><img src="produit/1.webp" alt="Produit 1" loading="lazy" decoding="async">
+                        </div>
+                        <div class="shop-hover-action">DÉCOUVRIR</div>
+                    </div>
+                    <h3>NOM 1</h3>
+                </div>
+                <div class="shop-item" onclick="window.location.href='shop/boutique.html'" style="cursor:pointer">
+                    <div class="shop-img-container">
+                        <div class="shop-img"><img src="produit/2.webp" alt="Produit 2" loading="lazy" decoding="async">
+                        </div>
+                        <div class="shop-hover-action">DÉCOUVRIR</div>
+                    </div>
+                    <h3>NOM 2</h3>
+                </div>
+                <div class="shop-item" onclick="window.location.href='shop/boutique.html'" style="cursor:pointer">
+                    <div class="shop-img-container">
+                        <div class="shop-img"><img src="produit/3.webp" alt="Produit 3" loading="lazy" decoding="async">
+                        </div>
+                        <div class="shop-hover-action">DÉCOUVRIR</div>
+                    </div>
+                    <h3>NOM 3</h3>
+                </div>
+                <div class="shop-item" onclick="window.location.href='shop/boutique.html'" style="cursor:pointer">
+                    <div class="shop-img-container">
+                        <div class="shop-img"><img src="produit/4.webp" alt="Produit 4" loading="lazy" decoding="async">
+                        </div>
+                        <div class="shop-hover-action">DÉCOUVRIR</div>
+                    </div>
+                    <h3>NOM 4</h3>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 60px;">
+                <button onclick="window.location.href='shop/boutique.html'" style="background: transparent; border: 1px solid #ff0000; color: #fff; padding: 15px 45px; border-radius: 50px; font-family: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer; letter-spacing: 3px; text-transform: uppercase; transition: all 0.3s ease;" onmouseover="this.style.background='#ff0000'" onmouseout="this.style.background='transparent'">
+                    VOIR TOUTE LA BOUTIQUE +
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="normal-section section2">
+        <div class="content">
+            <h1 class="reveal-title expertise-full-title">NOS SERVICES</h1>
+        </div>
+    </section>
+
+    <!-- SERVICES DETAILS SECTION -->
+    <section id="services" class="services-details-section">
+        <!-- CATEGORY 1: TECHNIQUE & PNEUS -->
+        <div class="service-category">
+            <h2 class="category-title">Technique & Pneumatiques</h2>
+            <div class="drag-container">
+                <div class="service-detail-card">
+                    <h3>MONTAGE</h3>
+                    <p>Installation rapide et sécurisée de vos pneus sur jantes, avec un équipement adapté à tous types
+                        de véhicules.</p>
+                </div>
+                <div class="service-detail-card">
+                    <h3>EQUILIBRAGE</h3>
+                    <p>Correction du balourd des roues pour une conduite fluide, stable et sans vibrations.</p>
+                </div>
+                <div class="service-detail-card">
+                    <h3>PARALLÉLISME</h3>
+                    <p>Alignement précis des roues pour améliorer la tenue de route et prolonger la durée de vie des
+                        pneus.</p>
+                </div>
+                <div class="service-detail-card">
+                    <h3>SCANNAGE</h3>
+                    <p>Diagnostic électronique complet pour détecter et corriger les anomalies techniques du véhicule.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORY 2: ENTRETIEN & MAINTENANCE -->
+        <div class="service-category">
+            <h2 class="category-title">Entretien & Maintenance</h2>
+            <div class="drag-container">
+                <div class="service-detail-card">
+                    <h3>VIDANGE</h3>
+                    <p>Renouvellement de l’huile moteur et remplacement du filtre pour préserver la performance et la
+                        longévité du moteur.</p>
+                </div>
+                <div class="service-detail-card">
+                    <h3>ENTRETIEN</h3>
+                    <p>Vérification et maintenance régulières des principaux organes du véhicule pour rouler en toute
+                        sérénité.</p>
+                </div>
+                <div class="service-detail-card">
+                    <h3>RÉPARATION</h3>
+                    <p>Interventions ciblées sur les systèmes mécaniques, électroniques ou hydrauliques pour un véhicule
+                        remis en état.</p>
+                </div>
+                <div class="service-detail-card">
+                    <h3>LAVAGE</h3>
+                    <p>Nettoyage intérieur et extérieur soigné, avec des produits professionnels pour redonner tout son
+                        éclat à votre voiture.</p>
+                </div>
+                <div class="service-detail-card">
+                    <h3>GRAISSAGE</h3>
+                    <p>Lubrification des éléments mécaniques pour prévenir l’usure et garantir le bon fonctionnement du
+                        véhicule.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SPLIT REVEAL SECTION -->
+    <section class="split-reveal-section" id="pret-a-rouler">
+        <div class="split-reveal-content">
+            <div class="reveal-image-bg" style="background-image: url('bg/2.webp');"></div>
+            <h2 class="reveal-text-overlay">PRÊT À ROULER</h2>
+        </div>
+        <div class="split-door door-left"></div>
+        <div class="split-door door-right"></div>
+    </section>
+
+    <!-- NOS VALEURS SECTION -->
+    <section id="nos-valeurs" class="values-section">
+        <h2 class="category-title" style="text-align: center; margin-bottom: 50px;">Nos Valeurs</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+                </div>
+                <h3>TRANSPARENCE</h3>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                        </polygon>
+                    </svg>
+                </div>
+                <h3>EXCELLENCE</h3>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3>FIABILITÉ</h3>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                </div>
+                <h3>PASSION</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARTNERS & LOGOS SECTION -->
+    <section class="partners-slider-section logo-section-tight"
+        style="position: relative; z-index: 10; box-shadow: 0 -30px 50px rgba(0,0,0,1);">
+
+        <!-- Track 2: Logos from 'partenaire' folder (Large) -->
+        <div class="partners-track track-slow track-large">
+            <div class="partner-item"><img src="partenaire/524c1260612a8b5b7ae5a69d4af3368f7a9ba821-300x115.webp"
+                    alt="Partner" loading="lazy" decoding="async"></div>
+            <div class="partner-item"><img src="partenaire/592919623898b5e19e2b3a1b60b836de0ce23209-300x45.jpg"
+                    alt="Partner" loading="lazy" decoding="async"></div>
+            <div class="partner-item"><img src="partenaire/9196db17f41b5002c96233be94bc55bee1a5d077-300x85.webp"
+                    alt="Partner" loading="lazy" decoding="async"></div>
+            <div class="partner-item"><img src="partenaire/a9f79abc10d0d5941a7c907c21d199d997ba6ec5-300x212.jpg"
+                    alt="Partner" loading="lazy" decoding="async"></div>
+            <!-- Duplicated -->
+            <div class="partner-item"><img src="partenaire/524c1260612a8b5b7ae5a69d4af3368f7a9ba821-300x115.webp"
+                    alt="Partner" loading="lazy" decoding="async"></div>
+            <div class="partner-item"><img src="partenaire/592919623898b5e19e2b3a1b60b836de0ce23209-300x45.jpg"
+                    alt="Partner" loading="lazy" decoding="async"></div>
+            <div class="partner-item"><img src="partenaire/9196db17f41b5002c96233be94bc55bee1a5d077-300x85.webp"
+                    alt="Partner" loading="lazy" decoding="async"></div>
+            <div class="partner-item"><img src="partenaire/a9f79abc10d0d5941a7c907c21d199d997ba6ec5-300x212.jpg"
+                    alt="Partner" loading="lazy" decoding="async"></div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2 class="category-title">Questions Fréquentes</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">Quels sont vos délais pour un montage ? <span>+</span></div>
+                    <div class="faq-answer">Le montage de pneus s'effectue généralement en moins de 45 minutes par nos
+                        experts qualifiés.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Faut-il prendre rendez-vous pour un diagnostic ? <span>+</span></div>
+                    <div class="faq-answer">Nous recommandons de prendre rendez-vous pour garantir une prise en charge
+                        immédiate, mais nous acceptons les urgences selon disponibilité.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Proposez-vous des véhicules de remplacement ? <span>+</span></div>
+                    <div class="faq-answer">Oui, un véhicule de courtoisie premium peut être mis à votre disposition
+                        pour les interventions de longue durée.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Quelles marques de pneus proposez-vous ? <span>+</span></div>
+                    <div class="faq-answer">Nous travaillons exclusivement avec les plus grandes marques : Michelin,
+                        Pirelli, Continental et Bridgestone.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>SPBL</h3>
+                <p>Garage de prestige spécialisé dans les véhicules de luxe et de collection.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Contact</h3>
+                <p>contact@sbpl.bj</p>
+                <p>(+ 229 ) 01 95 80 08 00</p>
+            </div>
+            <div class="footer-col">
+                <h3>Suivez-nous</h3>
+                <div class="footer-social-icons">
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- LARGE INFINITE MARQUEE TITLE -->
+        <div class="footer-marquee">
+            <div class="marquee-content">
+                <span>sbpl</span>
+                <span>sbpl</span>
+                <span>sbpl</span>
+                <span>sbpl</span>
+                <span>sbpl</span>
+                <span>sbpl</span>
+                <span>sbpl</span>
+                <span>sbpl</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GLOBAL SCROLL INDICATOR -->
+    <div id="global-scroll-indicator" class="global-scroll-indicator">
+        <p>SCROLL</p>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+        </svg>
+    </div>
+
+    <!-- Secondary Stylesheets (Loaded later for speed) -->
+    <link rel="stylesheet" href="entities.css">
+    <link rel="stylesheet" href="stats.css">
+    <link rel="stylesheet" href="services.css">
+
+    <!-- GSAP & Lenis (LOADED LAST FOR SPEED) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
+    <!-- Script Principal -->
+    <script src="app.js"></script>
+</body>
+
+</html>
+
+</html>

@@ -1,0 +1,99 @@
+/* SERVICES DETAILS SECTION (DRAGGABLE) */
+.services-details-section {
+    padding: 0 5% 120px 5%;
+    background: #000;
+    position: relative;
+    z-index: 30;
+}
+
+.service-category {
+    margin-bottom: 80px;
+    position: relative;
+}
+
+.category-title {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+    padding-left: 20px;
+    border-left: 2px solid #ff0000;
+    font-weight: 700;
+}
+
+.drag-container {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    padding: 20px 0 40px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
+    cursor: grab;
+}
+
+.drag-container::-webkit-scrollbar {
+    display: none;
+}
+
+.drag-container:active {
+    cursor: grabbing;
+}
+
+/* Shadow indicator to signal more content on the right */
+.service-category::after {
+    content: "";
+    position: absolute;
+    top: 60px;
+    right: -2px;
+    width: 200px;
+    height: calc(100% - 60px);
+    background: linear-gradient(to left, #000 10%, transparent 100%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.service-detail-card {
+    min-width: 320px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 45px 35px;
+    border-radius: 30px;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.service-detail-card h3 {
+    color: #ff0000;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.service-detail-card p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.service-detail-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-15px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 768px) {
+    .service-detail-card {
+        min-width: 280px;
+        padding: 30px;
+    }
+    .category-title {
+        font-size: 1rem;
+    }
+}

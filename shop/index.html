@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SBPL — Garage Premium</title>
+  <meta name="description" content="SBPL : pièces, outils et équipements de garage de haute performance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body data-theme="dark">
+  <!-- BANDEAU DÉFILANT -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <div class="ticker-item">L'EXCELLENCE AUTOMOBILE — PIÈCES DE PERFORMANCE — OUTILLAGE PRO — LIVRAISON 24H — PROMO
+        DE PRINTEMPS : -20% SUR L'OUTILLAGE — </div>
+      <div class="ticker-item">L'EXCELLENCE AUTOMOBILE — PIÈCES DE PERFORMANCE — OUTILLAGE PRO — LIVRAISON 24H — PROMO
+        DE PRINTEMPS : -20% SUR L'OUTILLAGE — </div>
+    </div>
+  </div>
+
+  <!-- HALO BACKGROUND -->
+  <div class="bg-halo" aria-hidden="true">
+    <div class="halo halo-1"></div>
+    <div class="halo halo-2"></div>
+    <div class="halo halo-3"></div>
+  </div>
+
+  <!-- BG IMAGE MOTION -->
+  <div class="bg-image-reveal" aria-hidden="true">
+    <img src="1.png" alt="" />
+  </div>
+
+  <!-- BANDEAU DÉFILANT -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <div class="ticker-item">L'EXCELLENCE AUTOMOBILE — PIÈCES DE PERFORMANCE — OUTILLAGE PRO — LIVRAISON 24H — PROMO
+        DE PRINTEMPS : -20% SUR L'OUTILLAGE — </div>
+      <div class="ticker-item">L'EXCELLENCE AUTOMOBILE — PIÈCES DE PERFORMANCE — OUTILLAGE PRO — LIVRAISON 24H — PROMO
+        DE PRINTEMPS : -20% SUR L'OUTILLAGE — </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="logo"><img src="../2.png" alt="SBPL" style="height: 30px; width: auto; opacity: 0.9;" /></a>
+      <nav class="nav-links">
+        <a href="../index.html" class="nav-btn">Accueil</a>
+        <a href="boutique.html" class="nav-btn">Boutique</a>
+      </nav>
+      <div class="nav-right">
+        <button id="theme-btn" class="icon-btn" title="Thème"><i data-lucide="moon" id="theme-icon"></i></button>
+        <button id="cart-btn" class="icon-btn" title="Panier">
+          <i data-lucide="shopping-bag"></i>
+          <span id="cart-badge" class="badge">0</span>
+        </button>
+        <button id="burger" class="icon-btn desktop-hide"><i data-lucide="menu"></i></button>
+      </div>
+    </div>
+    <div id="mobile-menu">
+      <a href="boutique.html" class="mob-btn">Boutique</a>
+    </div>
+  </header>
+
+  <!-- APP -->
+  <main id="app">
+
+    <!-- PAGE ACCUEIL -->
+    <div class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-text">
+          <span class="eyebrow">Collection 2026</span>
+          <h1>L'EXCELLENCE<br /><mark>DU GARAGE</mark></h1>
+          <p>Outillage professionnel, pièces de performance et accessoires de prestige pour les passionnés les plus
+            exigeants.</p>
+          <div class="hero-btns">
+            <a href="boutique.html" class="btn primary">Voir la boutique</a>
+            <button class="btn ghost" data-page="about">Notre histoire</button>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">SBPL</div>
+      </div>
+      <div class="kpi-bar">
+        <div class="kpi"><strong>+500</strong><span>produits</span></div>
+        <div class="kpi-sep"></div>
+        <div class="kpi"><strong>24 h</strong><span>livraison</span></div>
+        <div class="kpi-sep"></div>
+        <div class="kpi"><strong>5 ★</strong><span>satisfaction</span></div>
+        <div class="kpi-sep"></div>
+        <div class="kpi"><strong>12 ans</strong><span>d'expérience</span></div>
+      </div>
+      <!-- Section nouveautés -->
+      <div class="recents-section">
+        <div class="recents-header">
+          <div>
+            <span class="eyebrow">Nouveautés</span>
+            <h2 class="section-title">Arrivages Récents</h2>
+          </div>
+          <a href="boutique.html" class="btn ghost">Tout voir</a>
+        </div>
+        <div class="recents-grid" id="recents-grid"></div>
+      </div>
+
+      <!-- Section catégories avec icones SVG -->
+      <div class="categories-section">
+        <h2 class="section-title">Explorez par catégorie</h2>
+        <div class="cat-grid">
+
+          <a class="cat-card" href="boutique.html?cat=outillage">
+            <div class="cat-icon">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M38 8L28 18M28 18L22 12L8 26L14 32L28 18Z" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M28 18L38 28C39.1 29.1 39.1 30.9 38 32L36 34C34.9 35.1 33.1 35.1 32 34L18 20"
+                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="10" cy="38" r="3" stroke="currentColor" stroke-width="2.5" />
+              </svg>
+            </div>
+            <span>Outillage</span>
+            <em>47 produits</em>
+            </button>
+
+            <a class="cat-card" href="boutique.html?cat=performance">
+              <div class="cat-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24 6L28 18H40L30 26L34 38L24 30L14 38L18 26L8 18H20L24 6Z" stroke="currentColor"
+                    stroke-width="2.5" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <span>Performance</span>
+              <em>38 produits</em>
+              </button>
+
+              <a class="cat-card" href="boutique.html?cat=accessoires">
+                <div class="cat-icon">
+                  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="2.5" />
+                    <circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2.5" />
+                    <path d="M24 8V18M24 30V40M8 24H18M30 24H40" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" />
+                  </svg>
+                </div>
+                <span>Accessoires</span>
+                <em>29 produits</em>
+                </button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE BOUTIQUE -->
+    <div class="page" id="page-shop">
+
+      <!-- ── PROMO SLIDER (pleine largeur, hors page-wrap) ── -->
+      <!-- ── DESKTOP PROMO SLIDER ── -->
+      <div class="promo-slider-wrap desktop-only">
+        <div class="promo-slider" id="promo-slider">
+
+          <!-- Slide 1 -->
+          <div class="promo-slide">
+            <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1400&auto=format&fit=crop"
+              alt="Entretien" />
+            <div class="promo-overlay"></div>
+            <div class="promo-content">
+              <span class="promo-tag">🛠️ Service Expert</span>
+              <h2>Entretien Complet<br />& Vidange Pro</h2>
+              <p>Huiles premium, filtres haute qualité et vérification de 30 points de contrôle pour votre sécurité.</p>
+              <div class="promo-price-row">
+                <span class="promo-new">Forfaits dès 45 000 FCFA</span>
+              </div>
+              <button class="btn primary" data-page="shop">Prendre rendez-vous</button>
+            </div>
+            <div class="promo-cat-label">Entretien</div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="promo-slide">
+            <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1400&auto=format&fit=crop"
+              alt="Car Premium" />
+            <div class="promo-overlay"></div>
+            <div class="promo-content">
+              <span class="promo-tag">💻 Haute Technologie</span>
+              <h2>Diagnostic<br />Électronique HD</h2>
+              <p>Identification précise des pannes via valise dernière génération. Rapport complet fourni.</p>
+              <div class="promo-price-row">
+                <span class="promo-new">À partir de 15 000 FCFA</span>
+              </div>
+              <button class="btn primary" data-page="shop">Scanner mon véhicule</button>
+            </div>
+            <div class="promo-cat-label">Diagnostic</div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="promo-slide">
+            <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?w=1400&auto=format&fit=crop"
+              alt="Réparation" />
+            <div class="promo-overlay"></div>
+            <div class="promo-content">
+              <span class="promo-tag">🔧 Expertise Moteur</span>
+              <h2>Réparation &<br />Révision Moteur</h2>
+              <p>Remise à neuf, culasse, distribution et embrayage. Travail garanti par nos experts.</p>
+              <div class="promo-price-row">
+                <span class="promo-new">Devis Gratuit</span>
+              </div>
+              <button class="btn primary" data-page="shop">Demander un devis</button>
+            </div>
+            <div class="promo-cat-label">Réparation</div>
+          </div>
+
+        </div>
+
+        <!-- Navigation slider -->
+        <button class="slider-nav prev" id="slider-prev" aria-label="Précédent">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <button class="slider-nav next" id="slider-next" aria-label="Suivant">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <!-- Dots -->
+        <div class="slider-dots" id="slider-dots">
+          <button class="dot active" data-idx="0"></button>
+          <button class="dot" data-idx="1"></button>
+          <button class="dot" data-idx="2"></button>
+        </div>
+      </div>
+
+      <!-- ── MOBILE PROMO SLIDER ── -->
+      <div class="mobile-slider-wrap mobile-only">
+        <div class="mobile-slider" id="mobile-slider">
+          <div class="m-slide active" data-page="shop">
+            <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&auto=format&fit=crop"
+              alt="Entretien" />
+            <div class="m-slide-info">
+              <h3>Entretien & Vidange</h3>
+              <span>Dès 45 000 FCFA</span>
+            </div>
+          </div>
+          <div class="m-slide" data-page="shop">
+            <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&auto=format&fit=crop"
+              alt="Car" />
+            <div class="m-slide-info">
+              <h3>Diagnostic Électronique</h3>
+              <span>15 000 FCFA</span>
+            </div>
+          </div>
+          <div class="m-slide" data-page="shop">
+            <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&auto=format&fit=crop"
+              alt="Moteur" />
+            <div class="m-slide-info">
+              <h3>Réparation Moteur</h3>
+              <span>Sur Devis</span>
+            </div>
+          </div>
+        </div>
+        <div class="m-dots" id="m-dots"></div>
+      </div>
+
+      <div class="page-wrap">
+        <!-- ── RÉCENTS (scroll horizontal) ── -->
+        <div class="recents-shop-section">
+          <div class="recents-shop-head">
+            <div>
+              <span class="eyebrow">Nouveautés</span>
+              <h2 class="section-title">Arrivages Récents</h2>
+            </div>
+            <div class="scroll-hint">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+              Défiler
+            </div>
+          </div>
+          <div class="recents-scroll" id="recents-scroll"></div>
+        </div>
+
+        <div class="shop-divider"></div>
+
+        <!-- ── CONTRÔLES + GRILLE ── -->
+        <div class="shop-controls">
+          <div class="search-wrap">
+            <svg class="search-ico" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+              <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+            <input id="search-input" type="text" placeholder="Rechercher un produit..." />
+            <button id="search-clear" class="search-clear" aria-label="Effacer">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+          <div class="filters-area">
+            <div class="filters" id="filters">
+              <button class="filter active" data-cat="all"><i data-lucide="layout-grid"></i>Tout</button>
+              <button class="filter" data-cat="outillage"><i data-lucide="wrench"></i>Outillage</button>
+              <button class="filter" data-cat="performance"><i data-lucide="zap"></i>Performance</button>
+              <button class="filter" data-cat="accessoires"><i data-lucide="settings"></i>Accessoires</button>
+            </div>
+          </div>
+          <select id="sort-select" class="sort-select">
+            <option value="default">Trier par</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+            <option value="name-asc">Nom A → Z</option>
+            <option value="name-desc">Nom Z → A</option>
+          </select>
+        </div>
+
+        <div class="product-grid" id="product-grid"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+
+    <!-- PAGE PRODUIT (Détail) -->
+    <div class="page" id="page-product">
+      <div class="page-wrap">
+        <button class="btn-back" data-page="shop">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          Retour à la boutique
+        </button>
+
+        <div class="product-detail-layout" id="product-detail-content">
+          <!-- Rempli dynamiquement par JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE À PROPOS -->
+    <div class="page" id="page-about">
+      <div class="page-wrap">
+        <div class="about-hero">
+          <span class="eyebrow">Notre Histoire</span>
+          <h1>Nés dans le garage.<br /><mark>Pour le garage.</mark></h1>
+          <p>SBPL a été fondé par des mécaniciens passionnés. Notre mission : rendre accessibles les équipements
+            professionnels que seuls les ateliers haut de gamme pouvaient s'offrir.</p>
+          <button class="btn primary" data-page="shop">Explorer la boutique</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat"><strong>12+</strong><span>Années d'exp..</span></div>
+          <div class="stat"><strong>5k+</strong><span>Clients</span></div>
+          <div class="stat"><strong>150+</strong><span>Marques</span></div>
+          <div class="stat"><strong>24h</strong><span>Livraison</span></div>
+        </div>
+        <div class="values-grid">
+          <div class="value-card"><i data-lucide="shield-check"></i>
+            <h3>Qualité garantie</h3>
+            <p>Chaque produit testé et certifié avant expédition.</p>
+          </div>
+          <div class="value-card"><i data-lucide="truck"></i>
+            <h3>Livraison rapide</h3>
+            <p>Expédition en 24h partout en France.</p>
+          </div>
+          <div class="value-card"><i data-lucide="headphones"></i>
+            <h3>Support expert</h3>
+            <p>Une équipe de mécaniciens disponible 6j/7.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <button class="logo" data-page="home"><img src="../2.png" alt="SBPL" style="height: 25px; width: auto; opacity: 0.8;" /></button>
+      <p class="footer-copy">© 2026 SBPL Garage. Tous droits réservés.</p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CART DRAWER -->
+  <div id="overlay"></div>
+  <aside id="cart-drawer">
+    <div class="drawer-top">
+      <h2>Mon Panier</h2>
+      <button id="close-cart" class="icon-btn"><i data-lucide="x"></i></button>
+    </div>
+    <div id="cart-list"></div>
+    <div class="drawer-bottom">
+      <div class="total-row"><span>Total</span><strong id="cart-total">0 FCFA</strong></div>
+      <button class="btn primary full" id="checkout-btn">Passer commande</button>
+    </div>
+  </aside>
+
+  <div id="toast"></div>
+
+  <script src="products.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>

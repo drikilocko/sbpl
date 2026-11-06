@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BOUTIQUE — SBPL Garage</title>
+  <meta name="description" content="Découvrez notre catalogue complet d'outillage et pièces de performance."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* Spécifique pour cette page boutique directe */
+    #app { margin-top: 80px; }
+    .page-boutique-direct { display: block !important; opacity: 1 !important; }
+  </style>
+</head>
+<body data-theme="dark">
+
+<!-- HALO BACKGROUND -->
+<div class="bg-halo" aria-hidden="true">
+  <div class="halo halo-1"></div>
+  <div class="halo halo-2"></div>
+</div>
+
+<!-- BANDEAU DÉFILANT -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item">L'EXCELLENCE AUTOMOBILE — PIÈCES DE PERFORMANCE — OUTILLAGE PRO — LIVRAISON 24H — PROMO DE PRINTEMPS : -20% SUR L'OUTILLAGE — </div>
+    <div class="ticker-item">L'EXCELLENCE AUTOMOBILE — PIÈCES DE PERFORMANCE — OUTILLAGE PRO — LIVRAISON 24H — PROMO DE PRINTEMPS : -20% SUR L'OUTILLAGE — </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<header id="navbar">
+  <div class="nav-container">
+    <a href="../index.html" class="logo"><img src="../2.png" alt="SBPL" style="height: 30px; width: auto; opacity: 0.9;"/></a>
+    <nav class="nav-links">
+      <a href="../index.html" class="nav-btn">Accueil</a>
+      <a href="boutique.html" class="nav-btn active">Boutique</a>
+    </nav>
+    <div class="nav-right">
+      <button id="cart-btn" class="icon-btn" title="Panier">
+        <i data-lucide="shopping-bag"></i>
+        <span id="cart-badge" class="badge">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- APP -->
+<main id="app">
+  <div class="page-boutique-direct" id="page-shop">
+    <div class="page-wrap">
+      
+
+
+      <!-- ── PROMO SLIDER ── -->
+      <div class="promo-slider-wrap desktop-only" style="margin-bottom: 4rem;">
+        <div class="promo-slider" id="promo-slider">
+          <div class="promo-slide active">
+            <img src="../produit/1.webp" alt="Outil"/>
+            <div class="promo-overlay"></div>
+            <div class="promo-content">
+              <span class="promo-tag">Promotion</span>
+              <h2>Équipement Pro<br/>Haute Performance</h2>
+              <p>Découvrez notre sélection d'outils haut de gamme pour votre atelier.</p>
+              <button class="btn primary">En savoir plus</button>
+            </div>
+          </div>
+          <div class="promo-slide">
+            <img src="../produit/2.webp" alt="Kit"/>
+            <div class="promo-overlay"></div>
+            <div class="promo-content">
+              <span class="promo-tag">Bestseller</span>
+              <h2>Kit Outillage<br/>Complet Expert</h2>
+              <p>La qualité SBPL pour des interventions précises et rapides.</p>
+              <button class="btn primary">Voir le kit</button>
+            </div>
+          </div>
+          <div class="promo-slide">
+            <img src="../produit/4.webp" alt="Jantes"/>
+            <div class="promo-overlay"></div>
+            <div class="promo-content">
+              <span class="promo-tag">Nouveauté</span>
+              <h2>Accessoires &<br/>Jantes Premium</h2>
+              <p>Sublimez votre véhicule avec nos accessoires exclusifs.</p>
+              <button class="btn primary">Découvrir</button>
+            </div>
+          </div>
+        </div>
+        <button class="slider-nav prev" id="slider-prev"><i data-lucide="chevron-left"></i></button>
+        <button class="slider-nav next" id="slider-next"><i data-lucide="chevron-right"></i></button>
+        <div class="slider-dots">
+          <button class="dot active" data-idx="0"></button>
+          <button class="dot" data-idx="1"></button>
+          <button class="dot" data-idx="2"></button>
+        </div>
+      </div>
+
+
+      <!-- ── CONTRÔLES + GRILLE ── -->
+      <div class="shop-controls">
+        <div class="search-wrap">
+          <svg class="search-ico" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <input id="search-input" type="text" placeholder="Rechercher un produit..."/>
+          <button id="search-clear" class="search-clear" aria-label="Effacer">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="filters-area">
+          <div class="filters" id="filters">
+            <button class="filter active" data-cat="all"><i data-lucide="layout-grid"></i>Tout</button>
+            <button class="filter" data-cat="outillage"><i data-lucide="wrench"></i>Outillage</button>
+            <button class="filter" data-cat="performance"><i data-lucide="zap"></i>Performance</button>
+            <button class="filter" data-cat="accessoires"><i data-lucide="settings"></i>Accessoires</button>
+          </div>
+        </div>
+        <select id="sort-select" class="sort-select">
+          <option value="default">Trier par</option>
+          <option value="price-asc">Prix croissant</option>
+          <option value="price-desc">Prix décroissant</option>
+          <option value="name-asc">Nom A → Z</option>
+          <option value="name-desc">Nom Z → A</option>
+        </select>
+      </div>
+
+      <div class="product-grid" id="product-grid"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+  <!-- PAGE PRODUIT (Détail) -->
+  <div class="page" id="page-product" style="display: none;">
+    <div class="page-wrap">
+      <button class="btn-back" onclick="window.location.href='boutique.html'">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Retour à la boutique
+      </button>
+      <div class="product-detail-layout" id="product-detail-content"></div>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="footer-inner">
+    <a href="../index.html" class="logo"><img src="../2.png" alt="SBPL" style="height: 25px; width: auto; opacity: 0.8;"/></a>
+    <p class="footer-copy">© 2026 SBPL Garage. Tous droits réservés.</p>
+    <div class="footer-socials">
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div id="overlay"></div>
+<aside id="cart-drawer">
+  <div class="drawer-top">
+    <h2>Mon Panier</h2>
+    <button id="close-cart" class="icon-btn"><i data-lucide="x"></i></button>
+  </div>
+  <div id="cart-list"></div>
+  <div class="drawer-bottom">
+    <div class="total-row"><span>Total</span><strong id="cart-total">0 FCFA</strong></div>
+    <button class="btn primary full" id="checkout-btn">Passer commande</button>
+  </div>
+</aside>
+
+<div id="toast"></div>
+
+<script src="products.js"></script>
+<script src="main.js"></script>
+<script>
+  // Le script main.js s'occupe maintenant de détecter qu'on est sur boutique.html
+  // et d'afficher automatiquement la section boutique.
+
+</script>
+</body>
+</html>
